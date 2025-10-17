@@ -157,6 +157,18 @@ app.post("/ocr", upload.single("file"), async (req, res) => {
 
 // 11) 启动（0.0.0.0 便于手机访问）
 const PORT = process.env.PORT || 8000;
+// 简单根路由：用来确认服务活着
+app.get("/", (_req, res) => res.send("OK"));
+
+// 健康检查：App 用它来自检
+app.get("/api/health", (_req, res) => {
+  res.json({
+    ok: true,
+    hasKey: !!process.env.OPENAI_API_KEY,
+    time: new Date().toISOString(),
+  });
+});
+
 app.listen(PORT, "0.0.0.0", () => {
   const ip = getLANIP();
   console.log("🚀 AI OCR server running:");
